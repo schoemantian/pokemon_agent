@@ -1,0 +1,16 @@
+name: pokemon_agent
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.9
+  - pip
+  - pip:
+    - poke-env
+    - python-dotenv
+    - openai
+    - anthropic
+    - google-generativeai
+    - requests
+    - tqdm
+    - tabulate

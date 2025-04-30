@@ -1,0 +1,8 @@
+poke-env
+python-dotenv
+openai
+anthropic
+google-generativeai
+requests
+tqdm
+tabulate
