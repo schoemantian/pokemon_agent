@@ -18,6 +18,17 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+.pytest_cache/
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
 
 # Environments
 .env
@@ -34,20 +45,48 @@ pokemon_agent/
 .vscode/
 *.swp
 *.swo
-
-# Logs
-logs/
-*.log
-
-# Temp files
+*~
+.*.sw[po]
 .DS_Store
 Thumbs.db
+
+# Logs and temp files
+logs/
+*.log
+server_output.log
+pokemon_agent_debug.log
+.ipynb_checkpoints/
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Pokemon Showdown
 pokemon-showdown/
+pokemon-showdown-backup/
+
+# Project specific
 pokemon_agent/
 extra_data/
+*secret*
+*api_key*
+*credentials*
+*.db
+*.sqlite
+*.sqlite3
+node_modules/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Compiled Python files
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 *.pyw
 *.pyz
+
+# Directories with sensitive or generated data
+**/battle_history/
+**/model_cache/

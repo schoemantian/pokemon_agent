@@ -1,332 +1,340 @@
-# Pokémon Battle Agent with GAIA: Multi-LLM Strategic Battles
+# GAIA: LLM-Powered Pokémon Battle Agent
 
-This project implements an advanced Pokémon battle agent system that leverages multiple Large Language Models (LLMs) to make strategic battle decisions. The GAIA (Generative AI Agent) framework enables different LLM-powered agents to battle against each other or human players, with each agent leveraging unique strategic approaches based on their underlying AI model.
+<div align="center">
+  <img src="https://raw.githubusercontent.com/smogon/pokemon-showdown/master/pokemonshowdown.png" alt="Pokémon Showdown Logo" width="300" />
+</div>
 
-## What It Does
+GAIA (Game-Aware Intelligent Agent) is an advanced AI battle system for Pokémon that pits different Large Language Models against each other in strategic battles. This project allows multiple AI agents powered by leading LLMs (OpenAI's GPT-4, Anthropic's Claude, Google's Gemini, and xAI's Grok) to compete in Pokémon battles on the Pokémon Showdown platform.
 
-This system enables you to:
+## 🌟 Features
 
-1. **Run AI vs AI Battles**: Pit different LLM-powered agents against each other (OpenAI vs Anthropic vs Gemini vs Grok)
-2. **Challenge Human Players**: Have an LLM-powered agent challenge human players on Pokémon Showdown
-3. **Accept Human Challenges**: Let humans challenge your LLM-powered agents
-4. **Analyze Battle Strategies**: The agents record memory of past interactions and adapt their strategies
-5. **Deploy to Hugging Face Spaces**: Host your AI agents online for others to battle against
+- **Multi-LLM Support**: Battle with agents powered by OpenAI (GPT-4), Anthropic (Claude), Google (Gemini), or xAI (Grok)
+- **Strategic Decision Making**: Agents analyze type matchups, move effectiveness, and battle state
+- **Battle Memory**: Agents remember opponent strategies and adapt accordingly
+- **Type Analysis System**: In-depth evaluation of type advantages and disadvantages
+- **Automated Battles**: Run single matches or tournaments with configurable settings
+- **Battle Monitoring**: Ensures battles complete successfully with timeouts and recovery mechanisms
+- **Local Server**: Built-in setup for a local Pokémon Showdown server
 
-## How It Works
+## 🚀 Quick Start
 
-### Agent Architecture
+```bash
+# Install dependencies
+pip install -r requirements.txt
 
-Each GAIA agent is composed of:
+# Set up your API keys in a .env file
+# See the API Keys section below
 
-1. **LLM Core**: Interfaces with one of four LLM providers:
-   - **OpenAI Agent** (GPT-4o): Precise and strategic battling style
-   - **Claude Agent** (Claude 3 Opus): Adaptive and context-aware battling style 
-   - **Gemini Agent** (Gemini Pro): Creative and unpredictable battling style
-   - **Grok Agent** (Optional): Experimental battling style
+# Start the Pokémon Showdown server
+chmod +x setup_server.sh
+./setup_server.sh
 
-2. **Battle Memory System**: Records opponent moves, effectiveness patterns, and strategies to improve over time
+# In a new terminal, run a battle between GPT-4 and Claude
+python3 run_battles.py --mode ai_vs_ai --agent1 openai --agent2 anthropic --battles 1
+```
 
-3. **Strategic Decision Engine**: Analyzes type matchups, move effectiveness, battle phases, and recommends optimal actions
+## 📋 Requirements
 
-4. **Type Analyzer**: Provides detailed analysis of type effectiveness and team coverage
+- Python 3.9+
+- Node.js 14+
+- OpenAI API key (for GPT-4 agent)
+- Anthropic API key (for Claude agent)
+- Google API key (for Gemini agent)
+- xAI API key (optional, for Grok agent)
 
-### Battle System
+## 🔧 Setup Guide
 
-The battle system uses [poke-env](https://github.com/hsahovic/poke-env) to interface with Pokémon Showdown, handling:
-
-1. **Automatic Username Generation**: Creates unique usernames that identify each agent's LLM type (e.g., "Claude_a2b3c4", "Gemini_x7y8z9")
-2. **Battle State Processing**: Converts game state into a format the LLMs can understand
-3. **Decision Processing**: Translates LLM strategic decisions into valid Pokémon Showdown commands
-4. **Battle Tracking**: Monitors ongoing battles and collects performance statistics
-
-### Agent Technology Stack
-
-- **Frontend**: Local terminal or Gradio web interface (for Hugging Face Spaces deployment)
-- **Backend**: Python with asyncio for handling concurrent battles
-- **LLM Integration**: Direct API calls to OpenAI, Anthropic, Google, and optionally xAI
-- **Game Interface**: poke-env library connecting to Pokémon Showdown servers (local or remote)
-
-## Running Locally
-
-### 1. Environment Setup
-
-First, clone the repository and set up your environment:
+### 1. Clone and Install Dependencies
 
 ```bash
 # Clone the repository (if you haven't already)
 git clone https://github.com/yourusername/pokemon_agent.git
 cd pokemon_agent
 
-# Option 1: Using conda
-conda env create -f environment.yml
-conda activate pokemon_agent
+# Create a virtual environment (recommended)
+python3 -m venv pokemon_agent
+source pokemon_agent/bin/activate  # On Windows: pokemon_agent\Scripts\activate
 
-# Option 2: Using pip
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-### 2. Setting Up API Keys
+### 2. API Keys Setup
 
 Create a `.env` file in the project root with your API keys:
 
 ```
-# Choose your LLM providers
-# You can set different providers for different agents
-OPENAI_AGENT_PROVIDER=openai
-CLAUDE_AGENT_PROVIDER=anthropic
-GEMINI_AGENT_PROVIDER=gemini
-GROK_AGENT_PROVIDER=grok  # Optional
+# Required API keys (add whichever you need)
+OPENAI_API_KEY=your-openai-key-here
+ANTHROPIC_API_KEY=your-anthropic-key-here
+GEMINI_API_KEY=your-gemini-key-here
+GROK_API_KEY=your-grok-key-here
 
-# API Keys for LLM Providers - Add all keys you plan to use
-OPENAI_API_KEY=sk-your-openai-api-key-here
-ANTHROPIC_API_KEY=sk-ant-your-anthropic-api-key-here
-GEMINI_API_KEY=your-gemini-api-key-here
-GROK_API_KEY=your-grok-api-key-here  # Optional
-
-# Pokémon Showdown Server Configuration
-# Use 'ws://localhost:8000/showdown/websocket' for local server
-SHOWDOWN_SERVER_URL=ws://localhost:8000/showdown/websocket
-SHOWDOWN_AUTHENTICATION_URL=https://play.pokemonshowdown.com/action.php?
-
-# Battle Configuration
-# Default format to use for battles
-BATTLE_FORMAT=gen9randombattle
+# Default provider (optional)
+LLM_PROVIDER=anthropic  # Choose from: openai, anthropic, gemini, grok
 ```
 
 ### 3. Start the Pokémon Showdown Server
 
-Run the setup script to install and start the local Pokémon Showdown server:
-
 ```bash
+# Make the script executable
 chmod +x setup_server.sh
+
+# Start the server
 ./setup_server.sh
 ```
 
 This script will:
-1. Clone the Pokémon Showdown repository (if not already present)
-2. Install dependencies and configure the server
-3. Create necessary directories with proper permissions
-4. Start the server in no-security mode for easier testing
+- Clone the Pokémon Showdown repository if it doesn't exist
+- Create necessary log directories
+- Configure the server with no authentication required
+- Start the server at http://localhost:8000
 
-### 4. Running Different Battle Modes
+Wait until you see "Worker 1 now listening on 0.0.0.0:8000" in the console output. The server is now running and ready to host battles.
 
-#### AI vs AI Battles
+**Keep this terminal window open while running battles in a different terminal window.**
 
-To run battles between different LLM agents:
+## 🏆 Battle Commands
 
-```bash
-# Use the enhanced start script for a clean start with better debugging
-./enhanced_start_battles.sh --agent1 openai --agent2 anthropic --battles 5
+Run these commands in a new terminal window while the Showdown server is running:
 
-# Enable debug mode for verbose logging
-./enhanced_start_battles.sh --debug --agent1 openai --agent2 anthropic --battles 5
+### AI vs AI Battles
 
-# Run with original script (may encounter issues with existing server instances)
-./start_battles.sh --mode ai_vs_ai --battles 5 --agent1 openai --agent2 anthropic
-
-# Alternative: Run directly (not recommended unless debugging specific issues)
-python run_patched_battles.py --mode ai_vs_ai --battles 3 --agent1 gemini --agent2 claude
-
-# Run a tournament between all available agents
-./enhanced_start_battles.sh -- --mode tournament --battles 2
-```
-
-#### Human vs AI Battles
-
-To challenge an AI agent as a human player:
+#### All LLM Matchup Combinations
 
 ```bash
-# Start an AI agent that will accept challenges from any player
-./enhanced_start_battles.sh -- --mode accept_human --agent openai --listen
+# GPT-4 vs Claude
+python3 run_battles.py --mode ai_vs_ai --agent1 openai --agent2 anthropic --battles 1
 
-# Then go to http://localhost:8000, choose a username, and challenge the agent
-# The agent's username will be displayed in the terminal (e.g., "Oabcde1234")
+# GPT-4 vs Gemini
+python3 run_battles.py --mode ai_vs_ai --agent1 openai --agent2 gemini --battles 1
+
+# GPT-4 vs Grok
+python3 run_battles.py --mode ai_vs_ai --agent1 openai --agent2 grok --battles 1
+
+# Claude vs GPT-4
+python3 run_battles.py --mode ai_vs_ai --agent1 anthropic --agent2 openai --battles 1
+
+# Claude vs Gemini
+python3 run_battles.py --mode ai_vs_ai --agent1 anthropic --agent2 gemini --battles 1
+
+# Claude vs Grok
+python3 run_battles.py --mode ai_vs_ai --agent1 anthropic --agent2 grok --battles 1
+
+# Gemini vs GPT-4
+python3 run_battles.py --mode ai_vs_ai --agent1 gemini --agent2 openai --battles 1
+
+# Gemini vs Claude
+python3 run_battles.py --mode ai_vs_ai --agent1 gemini --agent2 anthropic --battles 1
+
+# Gemini vs Grok
+python3 run_battles.py --mode ai_vs_ai --agent1 gemini --agent2 grok --battles 1
+
+# Grok vs GPT-4
+python3 run_battles.py --mode ai_vs_ai --agent1 grok --agent2 openai --battles 1
+
+# Grok vs Claude
+python3 run_battles.py --mode ai_vs_ai --agent1 grok --agent2 anthropic --battles 1
+
+# Grok vs Gemini
+python3 run_battles.py --mode ai_vs_ai --agent1 grok --agent2 gemini --battles 1
 ```
 
-To have an AI agent challenge a human player:
+#### Additional Options
 
 ```bash
-# Have the Claude agent challenge a specific human player
-./enhanced_start_battles.sh -- --mode challenge_human --agent claude --human YourUsername
+# Run battles with longer timeouts (5 min per turn, 30 min per battle)
+python3 run_battles.py --mode ai_vs_ai --agent1 anthropic --agent2 gemini --battles 1 --turn-timeout 300 --battle-timeout 1800
+
+# Battle against random player
+python3 run_battles.py --mode ai_vs_ai --agent1 openai --agent2 random --battles 1
+
+# Use a specific battle format
+python3 run_battles.py --mode ai_vs_ai --agent1 openai --agent2 anthropic --format gen9randombattle --battles 1
+
+# Run multiple battles at once
+python3 run_battles.py --mode ai_vs_ai --agent1 openai --agent2 anthropic --battles 5
 ```
 
-## Customizing Agents
+### Tournament Mode
 
-You can customize each agent by editing its configuration and behavior:
-
-### Changing the Default LLM for an Agent
-
-Edit the `.env` file to change which LLM provider is used by default:
-
-```
-# Default to Claude for all agents if not specified
-LLM_PROVIDER=anthropic
-```
-
-### Customizing Agent Strategies
-
-Each agent can be customized by modifying the weights in `gaia_agent.py`:
-
-```python
-# Example: Make the agent more aggressive in the early game
-self.strategy_profiles = {
-    self.PHASE_EARLY: {
-        "setup": 0.7,      # Reduced from 1.5
-        "offensive": 2.0,  # Increased from 1.0
-        "defensive": 0.5   # Reduced from 0.8
-    },
-    # ... other phases
-}
-```
-
-## Debugging and Monitoring
-
-The enhanced system includes comprehensive debugging and monitoring features:
-
-### Enhanced Logging
-
-- Detailed logging of battle events
-- Separate log files for server, battles, and debug info
-- Color-coded terminal output
-
-Enable debug mode to get more verbose logging:
+Run a round-robin tournament that automatically plays all LLM combinations against each other:
 
 ```bash
-# Enable debug mode with the flag
-./enhanced_start_battles.sh --debug
+# Standard tournament with 1 battle per matchup
+python3 run_battles.py --mode tournament --battles 1
 
-# Or set the environment variable
-DEBUG=1 ./enhanced_start_battles.sh
+# Tournament with extended timeouts
+python3 run_battles.py --mode tournament --battles 1 --turn-timeout 300 --battle-timeout 1800
+
+# Tournament with more battles per matchup
+python3 run_battles.py --mode tournament --battles 3
 ```
 
-### Battle Monitor
+Tournament mode is the easiest way to run all possible LLM agent combinations against each other in a single command. The system will automatically:
 
-The enhanced system includes a Battle Monitor that:
+1. Create agents for all available LLM providers (those with API keys in your .env file)
+2. Run battles between each pair of agents (all possible combinations)
+3. Track and report win rates across all matches
+4. Output comprehensive tournament statistics at the end
 
-- Tracks battle progress in real-time
-- Detects stalled battles
-- Provides detailed battle statistics
-- Logs errors and actions per battle
+This provides a great way to benchmark different LLM models' performance in strategic Pokemon battles.
 
-View battle status during or after battles:
+### Command-line Options
+
+```
+--mode          Battle mode: ai_vs_ai, tournament, accept_human, challenge_human
+--agent1        First agent (for ai_vs_ai): openai, anthropic, gemini, grok, random
+--agent2        Second agent (for ai_vs_ai): openai, anthropic, gemini, grok, random
+--battles       Number of battles to run
+--format        Battle format (default: gen9randombattle)
+--turn-timeout  Maximum seconds per turn (default: 180s)
+--battle-timeout Maximum seconds per battle (default: 1200s)
+--human         Human username for challenge mode
+--listen        Keep listening for challenges from humans
+```
+
+## 🔍 Viewing Battles
+
+Battles are displayed in the Pokémon Showdown interface:
+
+1. Go to http://localhost:8000 in your web browser
+2. Enter any username and click "Choose Name"
+3. Click "Watch a battle" in the left sidebar
+4. You should see ongoing battles listed - click on one to watch
+
+## 🧠 Agent Intelligence Features
+
+Each GAIA agent incorporates several advanced systems:
+
+### Type Analyzer
+
+Evaluates type matchups between Pokémon and calculates move effectiveness. The system:
+- Analyzes offensive and defensive type matchups
+- Identifies super-effective and resistant types
+- Rates moves based on type advantage, STAB, and power
+- Provides strategic recommendations
+
+### Battle Memory
+
+Tracks and learns from battle patterns:
+- Records opponent's Pokémon and their moves
+- Tracks successful and unsuccessful move outcomes
+- Observes opponent switching patterns
+- Provides strategic insights based on previous turns
+
+### Strategic Decision Engine
+
+Makes nuanced battle decisions based on:
+- Current battle phase (early, mid, late game)
+- Type matchups and move effectiveness
+- HP levels and status conditions
+- Weather and field conditions
+- Statistical analysis of possible outcomes
+
+## 🔄 Battle Monitoring and Recovery
+
+The system includes robust battle monitoring to ensure battles complete successfully:
+
+- **Turn Timeouts**: Limits maximum time per turn (default: 3 minutes)
+- **Battle Timeouts**: Ensures battles don't run indefinitely (default: 20 minutes)
+- **State Tracking**: Monitors battle progress and detects stalled states
+- **Recovery Actions**: Takes default actions if an agent fails to respond
+- **Automatic Forfeiting**: Ends battles that exceed the timeout limit
+
+## 🛠️ Troubleshooting
+
+### Common Issues and Solutions
+
+1. **Username Already Taken Errors**
+   - This happens when a previous session didn't properly close
+   - Run the cleanup script: `chmod +x cleanup.sh && ./cleanup.sh`
+   - Then restart the server with `./setup_server.sh`
+
+2. **Battles Start But Don't Complete**
+   - Use longer timeouts: `--turn-timeout 300 --battle-timeout 1800`
+   - If that doesn't work, clean up and restart the server
+
+3. **API Key Errors**
+   - Verify that your API keys are correctly set in the `.env` file
+   - Ensure there are no spaces around the equals sign
+   - Check that you have access to the specified models
+
+4. **Server Connection Issues**
+   - Make sure the server is fully initialized before starting battles
+   - Run the cleanup script and restart the server if you encounter connection errors
+
+### Server Cleanup and Restart
+
+The cleanup script provides an easy way to reset the server:
 
 ```bash
-# The monitor will automatically print summary statistics when battles complete
+# Make the script executable (if not already)
+chmod +x cleanup.sh
+
+# Run the cleanup script to kill all servers and clean logs
+./cleanup.sh
+
+# Start a fresh server
+./setup_server.sh
 ```
 
-### Error Handling
+## 📊 Battle Examples
 
-The enhanced system includes robust error handling:
-
-- Detailed logging of errors with stack traces
-- Automatic retries for failed battles
-- Graceful degradation on error conditions
-- Recovery mechanisms for common issues
-
-### Debug Flags
-
-You can control debugging features with these options:
+### Individual Matchups
 
 ```bash
-# Clean up server logs and restart (fixes many issues)
-./enhanced_start_battles.sh --clean
+# OpenAI vs Claude (3 battles)
+python3 run_battles.py --mode ai_vs_ai --agent1 openai --agent2 anthropic --battles 3
 
-# Set custom timeout for server startup
-./enhanced_start_battles.sh --timeout 120
+# Claude vs Gemini (5 battles)
+python3 run_battles.py --mode ai_vs_ai --agent1 anthropic --agent2 gemini --battles 5
 
-# Set number of retries for failed operations
-./enhanced_start_battles.sh --retries 5
+# Gemini vs Grok (2 battles)
+python3 run_battles.py --mode ai_vs_ai --agent1 gemini --agent2 grok --battles 2
 
-# Show help with all available options
-./enhanced_start_battles.sh --help
+# GPT-4 vs Grok (1 battle with extended timeouts)
+python3 run_battles.py --mode ai_vs_ai --agent1 openai --agent2 grok --battles 1 --turn-timeout 300 --battle-timeout 1800
 ```
 
-## Technical Details
-
-### Agent Naming Convention
-
-Each agent is automatically given a unique username based on its LLM provider:
-
-- OpenAI agents: `O[random string][timestamp]`
-- Claude agents: `C[random string][timestamp]`
-- Gemini agents: `G[random string][timestamp]`
-- Grok agents: `K[random string][timestamp]`
-
-This naming convention helps identify which LLM is behind each agent during battles.
-
-### Battle State Representation
-
-The battle state is represented as a formatted string that includes:
-
-- Your active Pokémon (species, type, HP, status, boosts)
-- Opponent's active Pokémon (species, type, HP, status, boosts)
-- Available moves (name, type, base power, accuracy, PP, category)
-- Available switches (Pokémon, HP, status)
-- Weather, terrains, and side conditions
-- Battle memory (patterns observed during the battle)
-
-### Decision Making Process
-
-1. The battle state is formatted into a prompt
-2. Type analysis is performed to evaluate matchups
-3. Strategic analysis determines optimal actions based on battle phase
-4. The battle memory is consulted for information about the opponent
-5. All this information is sent to the LLM with a carefully crafted prompt
-6. The LLM returns a structured decision (move or switch)
-7. The decision is converted to a Pokémon Showdown command
-
-## Troubleshooting
-
-### Common Issues
-
-- **Server Connection Issues**: Make sure the Pokémon Showdown server is running at http://localhost:8000
-- **API Key Errors**: Verify your API keys in the `.env` file
-- **Permission Errors**: Run `chmod -R 777 pokemon-showdown/logs` if you encounter permission issues 
-- **Battle Not Starting**: Ensure the usernames are correct when challenging or accepting challenges
-- **Username Already Taken Errors**: Always use `./enhanced_start_battles.sh` to properly reset the server
-- **Type Analysis Errors**: Fixed in the current code with a more robust type chart
-- **Message Attribute Error**: Fixed by the enhanced player patches
-
-### Quick Reset
-
-If you encounter any issues with battles not starting or usernames already taken:
+### LLM Tournament
 
 ```bash
-# Use the comprehensive enhanced start script with cleanup
-./enhanced_start_battles.sh --clean -- --mode ai_vs_ai --battles 1 --agent1 random --agent2 random
+# Full tournament (all LLMs, 2 battles per matchup)
+python3 run_battles.py --mode tournament --battles 2
+
+# Extended tournament (3 battles per matchup, longer timeouts)
+python3 run_battles.py --mode tournament --battles 3 --turn-timeout 300 --battle-timeout 1800
 ```
 
-### Recent Fixes
+### Custom Battle Formats
 
-The latest version includes several important fixes:
+```bash
+# Run battles with a different format
+python3 run_battles.py --mode ai_vs_ai --agent1 openai --agent2 anthropic --format gen9monotype --battles 2
+```
 
-1. **Enhanced Player Class Patch**: Added detailed logging and robust error handling for the `'str' object has no attribute 'message'` error in poke-env library
-2. **Battle Monitor**: Added comprehensive monitoring of battles with stall detection and detailed statistics
-3. **Improved Type Analysis**: Implemented a complete type chart with all 18 types for accurate effectiveness calculations
-4. **Robust Error Handling**: Added comprehensive error handling throughout the system
-5. **Detailed Logging**: Enhanced logging to help diagnose issues
-6. **Auto-Retry Logic**: Added automatic retry mechanisms for failed operations
+## 📝 Project Structure
 
-### Logs
+- `run_battles.py` - Main script to run battles between agents
+- `gaia_agent.py` - Implementation of the GAIA battle agent
+- `agents.py` - Base classes for different LLM providers
+- `utils.py` - Utility functions for type analysis and battle state formatting
+- `player_fix.py` - Enhanced battle monitoring and timeout handling
+- `setup_server.sh` - Script to set up and run the Pokémon Showdown server
+- `cleanup.sh` - Script to clean up server processes and logs
 
-Check these logs for troubleshooting:
-
-- **Main Log**: Available in the `logs/battle_*.log` file
-- **Server Log**: Available in the `logs/server_*.log` file
-- **Debug Log**: Available in the `logs/debug_*.log` file when running in debug mode
-- **Error Logs**: Located in `pokemon-showdown/logs/errors.txt`
-
-### Type Analysis Troubleshooting
-
-If you're experiencing issues with type effectiveness calculations:
-
-1. The code uses a pre-defined type chart instead of relying on the poke-env's `damage_multiplier()` method
-2. STAB (Same Type Attack Bonus) calculations are now handled by checking the active Pokémon's types instead of using the non-existent `move.pokemon` attribute
-3. All type lookups have fallbacks to default effectiveness (1.0) if type combinations aren't found in the chart
-
-## Credits
+## 🔗 Credits and Acknowledgments
 
 This project is built using:
-- [poke-env](https://github.com/hsahovic/poke-env) by Haris Sahovic
-- [Pokémon Showdown](https://pokemonshowdown.com/)
-- LLM APIs: OpenAI, Anthropic Claude, Google Gemini, and optionally xAI Grok
+- [poke-env](https://github.com/hsahovic/poke-env) - Pokémon Showdown API wrapper for Python
+- [Pokémon Showdown](https://pokemonshowdown.com/) - Pokémon battle simulator
+- LLM APIs from OpenAI, Anthropic, Google, and xAI
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to submit issues or pull requests to improve the project.
